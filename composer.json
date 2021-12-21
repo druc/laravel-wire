@@ -1,0 +1,65 @@
+{
+    "name": "druc/laravel-wire",
+    "description": "Import files and database from your application environments.",
+    "keywords": [
+        "druc",
+        "laravel",
+        "laravel-wire"
+    ],
+    "homepage": "https://github.com/druc/laravel-wire",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Constantin Druc",
+            "email": "druc@pinsmile.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "ext-zip": "*",
+        "guzzlehttp/guzzle": "^7.4",
+        "illuminate/contracts": "^8.73",
+        "spatie/db-dumper": "^2.21",
+        "spatie/laravel-package-tools": "^1.9.2"
+    },
+    "require-dev": {
+        "nunomaduro/collision": "^5.10",
+        "nunomaduro/larastan": "^1.0",
+        "orchestra/testbench": "^6.22",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Druc\\LaravelWire\\": "src",
+            "Druc\\LaravelWire\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Druc\\LaravelWire\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelWireServiceProvider"
+            ],
+            "aliases": {
+                "LaravelWire": "Druc\\LaravelWire\\Facades\\LaravelWire"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
