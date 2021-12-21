@@ -48,6 +48,9 @@ php artisan wire:db users,orders,order_items
 
 # import while excluding specific database tables 
 php artisan wire:db --exclude=users
+
+# import from specific environment
+php artisan wire:db --env=staging
 ```
 
 ## Files import
@@ -60,6 +63,9 @@ php artisan wire:files storage/avatars
 
 # import while excluding specific file paths
 php artisan wire:files storage --exclude=storage/media-library
+
+# import from specific environment
+php artisan wire:files --env=staging
 ```
 
 ## Testing
