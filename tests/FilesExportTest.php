@@ -12,7 +12,7 @@ class FilesExportTest extends TestCase
     public function export_path_for_file_path()
     {
         File::put(storage_path('temp.txt'), 'temporary file');
-        
+
         $export = new FilesExport([
             'paths' => [$this->path('storage/temp.txt')],
             'zip_path' => storage_path('wire/wire.zip'),
