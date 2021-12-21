@@ -4,7 +4,7 @@ return [
     'default' => 'stage',
     'environments' => [
         'stage' => [
-            'url' => 'https://umbr.test',
+            'url' => 'https://example.test',
             'key' => '1234'
         ]
     ],
