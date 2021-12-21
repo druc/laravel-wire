@@ -4,9 +4,6 @@ namespace Druc\LaravelWire\Tests;
 
 use Druc\LaravelWire\Exports\DbExport;
 use Druc\LaravelWire\FakeDumper;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Spatie\DbDumper\Databases\Sqlite;
 
 class DbExportTest extends TestCase
 {
