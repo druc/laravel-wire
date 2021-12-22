@@ -34,8 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Druc\\LaravelWire\\": "src",
-            "Druc\\LaravelWire\\Database\\Factories\\": "database/factories"
+            "Druc\\LaravelWire\\": "src"
         }
     },
     "autoload-dev": {
@@ -53,11 +52,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LaravelWireServiceProvider"
-            ],
-            "aliases": {
-                "LaravelWire": "Druc\\LaravelWire\\Facades\\LaravelWire"
-            }
+                "Druc\\LaravelWire\\LaravelWireServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",
