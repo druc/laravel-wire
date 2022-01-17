@@ -2,30 +2,37 @@
 
 namespace Druc\LaravelWire\Commands;
 
+use Druc\LaravelWire\EnvironmentConfig;
 use Druc\LaravelWire\Imports\FilesImport;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Webmozart\Assert\Assert;
 
 class WireFilesCommand extends Command
 {
-    public $signature = 'wire:files {paths?} {--exclude=}';
+    public $signature = 'wire:files {environment?} {--p|paths=} {--e|exclude=}';
 
     public $description = 'Imports files from environment';
 
     public function handle(): int
     {
-        Assert::notEmpty($this->envUrl(), "Environment url is not accessible: ".$this->envUrl());
+        $request = Http::withHeaders([
+            'wire-key' => $this->config()->authKey(),
+        ]);
 
-        $response = Http::withHeaders([
-            'wire-key' => config("wire.environments.".$this->env().".key"),
-        ])->get($this->envUrl('/files'), [
-            'paths' => array_filter(explode(',', $this->argument('paths'))),
-            'excluded_paths' => array_filter(explode(',', $this->option('exclude'))),
+        if ($this->config()->hasBasicAuth()) {
+            $request = $request->withBasicAuth(
+                $this->config()->basicAuthUsername(),
+                $this->config()->basicAuthPassword()
+            );
+        }
+
+        $response = $request->get($this->config()->url('/files'), [
+            'file_paths' => $this->filePaths(),
+            'excluded_file_paths' => $this->excludedFilePaths(),
         ]);
 
         if ($response->failed()) {
-            $this->error('Request failed with status: '.$response->status());
+            $this->error('Request failed with status: ' . $response->status());
 
             return self::FAILURE;
         }
@@ -35,13 +42,26 @@ class WireFilesCommand extends Command
         return self::SUCCESS;
     }
 
-    private function env(): string
+    private function config(): EnvironmentConfig
     {
-        return $this->option('env') ?? config('wire.default', 'stage');
+        return new EnvironmentConfig($this->argument('environment'));
     }
 
-    private function envUrl($segments = ''): string
+    private function filePaths(): array
     {
-        return rtrim(config("wire.environments.".$this->env().".url"), '/').$segments;
+        if ($this->option('paths') !== null) {
+            return array_filter(explode(',', $this->option('paths')));
+        }
+
+        return $this->config()->filePaths();
+    }
+
+    private function excludedFilePaths(): array
+    {
+        if ($this->option('exclude') !== null) {
+            return array_filter(explode(',', $this->option('exclude')));
+        }
+
+        return $this->config()->excludedFilePaths();
     }
 }

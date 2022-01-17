@@ -7,21 +7,22 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\Assert\Assert;
 use ZipArchive;
 
 class FilesExport
 {
     private array $paths;
     private array $excludedPaths;
-    private string $exportPath;
-
     private array $files;
 
     public function __construct(array $params = [])
     {
-        $this->paths = $params['paths'] ?? config('wire.paths', ['public', 'storage']);
-        $this->excludedPaths = $params['excluded_paths'] ?? config('wire.excluded_paths', []);
-        $this->exportPath = $params['zip_path'] ?? storage_path('wire/wire.zip');
+        Assert::isArray($params['file_paths']);
+        Assert::isArray($params['excluded_file_paths']);
+
+        $this->paths = $params['file_paths'];
+        $this->excludedPaths = $params['excluded_file_paths'];
     }
 
     public function path(): string
@@ -29,6 +30,7 @@ class FilesExport
         File::ensureDirectoryExists(storage_path('wire'));
 
         if (count($this->files()) === 0) {
+            // create empty zip archive
             File::put($this->zipPath(), base64_decode("UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="));
         } else {
             $zip = new ZipArchive();
@@ -37,7 +39,7 @@ class FilesExport
             foreach ($this->files() as $file) {
                 $zip->addFile(
                     $file->getPathname(),
-                    (string) new NameOfFileInZip($file->getPathname(), $this->zipPath(), base_path())
+                    (string)new NameOfFileInZip($file->getPathname(), $this->zipPath(), base_path())
                 );
             }
 
@@ -45,35 +47,6 @@ class FilesExport
         }
 
         return $this->zipPath();
-    }
-
-    private function zipPath(): string
-    {
-        return $this->exportPath;
-    }
-
-    private function shouldExcludePath($path): bool
-    {
-        return Collection::make($this->excludedPaths())
-            ->contains(function ($item) use ($path) {
-                return Str::startsWith($path, $item);
-            });
-    }
-
-    private function paths(): array
-    {
-        return Collection::make($this->paths)
-            ->map(function ($path) {
-                return base_path($path);
-            })->toArray();
-    }
-
-    private function excludedPaths(): array
-    {
-        return Collection::make($this->excludedPaths)
-            ->map(function ($path) {
-                return base_path($path);
-            })->toArray();
     }
 
     private function files(): array
@@ -95,5 +68,34 @@ class FilesExport
         return $this->files = $files->filter(function ($file) {
             return !$this->shouldExcludePath($file->getRealPath()) && $file->getRealPath() !== $this->zipPath();
         })->toArray();
+    }
+
+    private function zipPath(): string
+    {
+        return storage_path('wire/wire.zip');
+    }
+
+    private function paths(): array
+    {
+        return Collection::make($this->paths)
+            ->map(function ($path) {
+                return base_path($path);
+            })->toArray();
+    }
+
+    private function shouldExcludePath($path): bool
+    {
+        return Collection::make($this->excludedPaths())
+            ->contains(function ($item) use ($path) {
+                return Str::startsWith($path, $item);
+            });
+    }
+
+    private function excludedPaths(): array
+    {
+        return Collection::make($this->excludedPaths)
+            ->map(function ($path) {
+                return base_path($path);
+            })->toArray();
     }
 }

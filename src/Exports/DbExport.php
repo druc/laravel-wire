@@ -10,7 +10,6 @@ class DbExport
     private DbDumper $dbDumper;
     private array $tables;
     private array $excludedTables;
-    private string $exportPath;
 
     public function __construct(array $params = [])
     {
@@ -18,7 +17,6 @@ class DbExport
         $this->dbDumper = $params['db_dumper'];
         $this->tables = $params['tables'] ?? [];
         $this->excludedTables = $params['excluded_tables'] ?? [];
-        $this->exportPath = $params['export_path'] ?? storage_path('wire.sql');
     }
 
     public function path(): string
@@ -34,9 +32,9 @@ class DbExport
         return $this->exportPath();
     }
 
-    private function exportPath(): string
+    private function tables()
     {
-        return $this->exportPath;
+        return $this->tables;
     }
 
     private function excludedTables()
@@ -44,8 +42,8 @@ class DbExport
         return $this->excludedTables;
     }
 
-    private function tables()
+    private function exportPath(): string
     {
-        return $this->tables;
+        return storage_path('wire.sql');
     }
 }

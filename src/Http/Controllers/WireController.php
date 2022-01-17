@@ -2,6 +2,7 @@
 
 namespace Druc\LaravelWire\Http\Controllers;
 
+use Druc\LaravelWire\EnvironmentConfig;
 use Druc\LaravelWire\Exports\DbExport;
 use Druc\LaravelWire\Exports\FilesExport;
 use Illuminate\Database\ConfigurationUrlParser;
@@ -13,9 +14,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class WireController
 {
-    public function __construct()
+    public function __construct(EnvironmentConfig $config)
     {
-        if (empty(config('wire.environments.'.config('app.env').'.key')) || request()->header('wire-key') !== config('wire.environments.'.config('app.env').'.key')) {
+        if (empty($config->authKey()) || request()->header('wire-key') !== $config->authKey()) {
             abort(403);
         }
     }
@@ -40,13 +41,13 @@ class WireController
     public function files(): BinaryFileResponse
     {
         request()->validate([
-            'paths' => ['sometimes', 'array'],
-            'excluded_paths' => ['sometimes', 'array'],
+            'file_paths' => ['sometimes', 'array'],
+            'excluded_file_paths' => ['sometimes', 'array'],
         ]);
 
         $filesExport = new FilesExport([
-            'paths' => request('paths'),
-            'excluded_paths' => request('excluded_paths'),
+            'file_paths' => request('file_paths'),
+            'excluded_file_paths' => request('excluded_file_paths'),
         ]);
 
         return response()
@@ -74,7 +75,7 @@ class WireController
 
                 break;
             default:
-                throw new \Exception($config['driver']." not suported");
+                throw new \Exception($config['driver'] . " not suported");
         }
 
         return $dumper

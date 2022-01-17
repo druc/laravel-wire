@@ -14,8 +14,8 @@ class FilesExportTest extends TestCase
         File::put(storage_path('temp.txt'), 'temporary file');
 
         $export = new FilesExport([
-            'paths' => [$this->path('storage/temp.txt')],
-            'zip_path' => storage_path('wire/wire.zip'),
+            'file_paths' => [$this->path('storage/temp.txt')],
+            'excluded_file_paths' => [],
         ]);
 
         $zip = new ZipArchive();
@@ -32,8 +32,8 @@ class FilesExportTest extends TestCase
         File::put(storage_path('files/temp.txt'), 'temporary file');
 
         $export = new FilesExport([
-            'paths' => [$this->path('storage/files')],
-            'zip_path' => storage_path('wire/wire.zip'),
+            'file_paths' => [$this->path('storage/files')],
+            'excluded_file_paths' => [],
         ]);
 
         $zip = new ZipArchive();
@@ -50,9 +50,8 @@ class FilesExportTest extends TestCase
         File::put(storage_path('excluded_temp.txt'), 'Excluded temporary file');
 
         $export = new FilesExport([
-            'paths' => [$this->path('storage/temp.txt')],
-            'excluded_paths' => [$this->path('storage/excluded_temp.txt')],
-            'zip_path' => storage_path('wire/wire.zip'),
+            'file_paths' => [$this->path('storage/temp.txt')],
+            'excluded_file_paths' => [$this->path('storage/excluded_temp.txt')],
         ]);
 
         $zip = new ZipArchive();
@@ -71,9 +70,8 @@ class FilesExportTest extends TestCase
         File::put(storage_path('files/excluded_temp.txt'), 'Excluded temporary file');
 
         $export = new FilesExport([
-            'paths' => [$this->path('storage/temp.txt')],
-            'excluded_paths' => [$this->path('storage/files')],
-            'zip_path' => storage_path('wire/wire.zip'),
+            'file_paths' => [$this->path('storage/temp.txt')],
+            'excluded_file_paths' => [$this->path('storage/files')],
         ]);
 
         $zip = new ZipArchive();
@@ -89,8 +87,8 @@ class FilesExportTest extends TestCase
     public function export_path_with_no_files()
     {
         $export = new FilesExport([
-            'paths' => [],
-            'zip_path' => storage_path('wire/wire.zip'),
+            'file_paths' => [],
+            'excluded_file_paths' => [],
         ]);
         $this->assertFileExists($export->path());
     }

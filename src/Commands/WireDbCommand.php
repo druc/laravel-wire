@@ -2,30 +2,37 @@
 
 namespace Druc\LaravelWire\Commands;
 
+use Druc\LaravelWire\EnvironmentConfig;
 use Druc\LaravelWire\Imports\MysqlImport;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Webmozart\Assert\Assert;
 
 class WireDbCommand extends Command
 {
-    public $signature = 'wire:db {tables?} {--exclude=}';
+    public $signature = 'wire:db {environment?} {--t|tables=} {--e|exclude=}';
 
     public $description = 'Imports database tables from environment';
 
     public function handle(): int
     {
-        Assert::notEmpty($this->envUrl(), "Environment url is not accessible: ".$this->envUrl());
+        $request = Http::withHeaders([
+            'wire-key' => $this->config()->authKey(),
+        ]);
 
-        $response = Http::withHeaders([
-            'wire-key' => config("wire.environments.".$this->env().".key"),
-        ])->get($this->envUrl('/database'), [
-            'tables' => array_filter(explode(',', $this->argument('tables'))),
-            'excluded_tables' => array_filter(explode(',', $this->option('exclude'))),
+        if ($this->config()->hasBasicAuth()) {
+            $request = $request->withBasicAuth(
+                $this->config()->basicAuthUsername(),
+                $this->config()->basicAuthPassword()
+            );
+        }
+
+        $response = $request->get($this->config()->url('/database'), [
+            'tables' => $this->tables(),
+            'excluded_tables' => $this->excludedTables(),
         ]);
 
         if ($response->failed()) {
-            $this->error('Request failed with status: '.$response->status());
+            $this->error('Request failed with status: ' . $response->status());
 
             return self::FAILURE;
         }
@@ -35,13 +42,18 @@ class WireDbCommand extends Command
         return self::SUCCESS;
     }
 
-    private function env(): string
+    private function config(): EnvironmentConfig
     {
-        return $this->option('env') ?? config('wire.default', 'stage');
+        return new EnvironmentConfig($this->argument('environment'));
     }
 
-    private function envUrl($segments = ''): string
+    private function tables(): array
     {
-        return rtrim(config("wire.environments.".$this->env().".url"), '/').$segments;
+        return array_filter(explode(',', $this->option('tables')));
+    }
+
+    private function excludedTables(): array
+    {
+        array_filter(explode(',', $this->option('exclude')));
     }
 }

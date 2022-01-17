@@ -29,7 +29,7 @@ class NameOfFileInZip
             return str_replace($zipDirectory, '', $this->pathToFile);
         }
 
-        if ($this->relativePath && $this->relativePath != DIRECTORY_SEPARATOR && Str::startsWith($fileDirectory, $this->relativePath)) {
+        if ($this->relativePath && $this->relativePath !== DIRECTORY_SEPARATOR && Str::startsWith($fileDirectory, $this->relativePath)) {
             return str_replace($this->relativePath, '', $this->pathToFile);
         }
 

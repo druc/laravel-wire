@@ -40,17 +40,17 @@ return [
 ## Database import
 
 ```bash
-# import all database tables 
+# import all tables from default environment 
 php artisan wire:db 
 
-# import specific database tables 
-php artisan wire:db users,orders,order_items
+# import all tables from dev environment
+php artisan wire:db dev
 
-# import while excluding specific database tables 
-php artisan wire:db --exclude=users
+# import specific tables 
+php artisan wire:db -t users,orders,order_items
 
-# import from specific environment
-php artisan wire:db --env=staging
+# import while excluding specific tables 
+php artisan wire:db -e users
 ```
 
 ## Files import
