@@ -2,6 +2,7 @@
 
 namespace Druc\LaravelWire\Exports;
 
+use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\DbDumper;
 use Webmozart\Assert\Assert;
 
@@ -23,6 +24,10 @@ class DbExport
     {
         if (count($this->tables())) {
             $this->dbDumper->includeTables($this->tables());
+        }
+
+        if ($this->dbDumper instanceof MySql) {
+            $this->dbDumper->doNotUseColumnStatistics();
         }
 
         $this->dbDumper

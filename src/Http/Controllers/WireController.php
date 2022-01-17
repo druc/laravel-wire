@@ -38,23 +38,6 @@ class WireController
             ->deleteFileAfterSend();
     }
 
-    public function files(): BinaryFileResponse
-    {
-        request()->validate([
-            'file_paths' => ['sometimes', 'array'],
-            'excluded_file_paths' => ['sometimes', 'array'],
-        ]);
-
-        $filesExport = new FilesExport([
-            'file_paths' => request('file_paths'),
-            'excluded_file_paths' => request('excluded_file_paths'),
-        ]);
-
-        return response()
-            ->download($filesExport->path())
-            ->deleteFileAfterSend();
-    }
-
     private function dbDumper(): DbDumper
     {
         $parser = new ConfigurationUrlParser();
@@ -82,5 +65,22 @@ class WireController
             ->setDbName($config['database'])
             ->setUserName($config['username'])
             ->setPassword($config['password']);
+    }
+
+    public function files(): BinaryFileResponse
+    {
+        request()->validate([
+            'file_paths' => ['sometimes', 'array'],
+            'excluded_file_paths' => ['sometimes', 'array'],
+        ]);
+
+        $filesExport = new FilesExport([
+            'file_paths' => request('file_paths'),
+            'excluded_file_paths' => request('excluded_file_paths'),
+        ]);
+
+        return response()
+            ->download($filesExport->path())
+            ->deleteFileAfterSend();
     }
 }

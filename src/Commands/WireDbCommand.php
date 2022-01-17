@@ -54,6 +54,6 @@ class WireDbCommand extends Command
 
     private function excludedTables(): array
     {
-        array_filter(explode(',', $this->option('exclude')));
+        return array_filter(explode(',', $this->option('exclude')));
     }
 }
