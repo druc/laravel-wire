@@ -19,10 +19,10 @@ class EnvironmentConfigTest extends TestCase
                     'basic_auth' => [
                         'enabled' => true,
                         'username' => 'john',
-                        'password' => 'doe'
-                    ]
-                ]
-            ]
+                        'password' => 'doe',
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -50,7 +50,7 @@ class EnvironmentConfigTest extends TestCase
         $this->assertTrue($config->hasBasicAuth());
 
         config([
-            'wire.environments.stage.basic_auth.enabled' => false
+            'wire.environments.stage.basic_auth.enabled' => false,
         ]);
 
         $this->assertFalse($config->hasBasicAuth());
@@ -74,7 +74,7 @@ class EnvironmentConfigTest extends TestCase
     public function get_wire_key(): void
     {
         config([
-            'wire.environments.stage.auth_key' => "12345"
+            'wire.environments.stage.auth_key' => "12345",
         ]);
         $config = new EnvironmentConfig();
         $this->assertEquals('12345', $config->authKey());

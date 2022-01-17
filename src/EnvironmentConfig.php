@@ -17,6 +17,7 @@ class EnvironmentConfig
     {
         $url = rtrim(config("wire.environments.$this->env.url"), '/') . $segments;
         Assert::notEmpty($url, "$this->env environment url is empty.");
+
         return $url;
     }
 
@@ -28,12 +29,14 @@ class EnvironmentConfig
     public function basicAuthUsername(): string
     {
         Assert::keyExists(config("wire.environments.$this->env.basic_auth"), 'username');
+
         return config("wire.environments.$this->env.basic_auth.username");
     }
 
     public function basicAuthPassword(): string
     {
         Assert::keyExists(config("wire.environments.$this->env.basic_auth"), 'password');
+
         return config("wire.environments.$this->env.basic_auth.password");
     }
 
