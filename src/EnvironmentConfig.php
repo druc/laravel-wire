@@ -15,43 +15,43 @@ class EnvironmentConfig
 
     public function url($segments = ''): string
     {
-        $url = rtrim(config("wire.environments.$this->env.url"), '/') . $segments;
+        $url = rtrim($this->config("url"), '/').$segments;
         Assert::notEmpty($url, "$this->env environment url is empty.");
-
         return $url;
     }
 
     public function hasBasicAuth(): bool
     {
-        return config("wire.environments.$this->env.basic_auth.enabled") === true;
+        return $this->config("basic_auth.enabled") === true;
     }
 
-    public function basicAuthUsername(): string
+    public function basicAuthUsername(): ?string
     {
-        Assert::keyExists(config("wire.environments.$this->env.basic_auth"), 'username');
-
-        return config("wire.environments.$this->env.basic_auth.username");
+        return $this->config("basic_auth.username");
     }
 
-    public function basicAuthPassword(): string
+    public function basicAuthPassword(): ?string
     {
-        Assert::keyExists(config("wire.environments.$this->env.basic_auth"), 'password');
-
-        return config("wire.environments.$this->env.basic_auth.password");
+        return $this->config("basic_auth.password");
     }
 
-    public function authKey(): string
+    public function authKey(): ?string
     {
-        return config("wire.environments.$this->env.auth_key");
+        return $this->config("auth_key");
     }
 
     public function filePaths(): array
     {
-        return config("wire.environments.$this->env.file_paths", ['public', 'storage']);
+        return $this->config("file_paths", ['public', 'storage']);
     }
 
     public function excludedFilePaths(): array
     {
-        return config("wire.environments.$this->env.excluded_file_paths", []);
+        return $this->config('excluded_file_paths', []);
+    }
+
+    private function config($key, $default = null)
+    {
+        return config("wire.environments.$this->env.$key", $default);
     }
 }

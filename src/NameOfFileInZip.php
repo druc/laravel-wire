@@ -8,16 +8,16 @@ class NameOfFileInZip
 {
     private string $pathToFile;
     private string $pathToZip;
-    private string $relativePath;
+    private ?string $relativePath;
 
     public function __construct(
         string $pathToFile,
         string $pathToZip,
-        string $relativePath
+        ?string $relativePath = null
     ) {
         $this->pathToFile = $pathToFile;
         $this->pathToZip = $pathToZip;
-        $this->relativePath = $relativePath;
+        $this->relativePath = $relativePath ?? base_path();
     }
 
     public function __toString()

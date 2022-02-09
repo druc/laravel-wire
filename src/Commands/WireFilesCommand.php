@@ -15,25 +15,18 @@ class WireFilesCommand extends Command
 
     public function handle(): int
     {
-        $request = Http::withHeaders([
+        $response = Http::withHeaders([
             'wire-key' => $this->config()->authKey(),
-        ]);
-
-        if ($this->config()->hasBasicAuth()) {
-            $request = $request->withBasicAuth(
-                $this->config()->basicAuthUsername(),
-                $this->config()->basicAuthPassword()
-            );
-        }
-
-        $response = $request->get($this->config()->url('/files'), [
+        ])->withBasicAuth(
+            $this->config()->basicAuthUsername(),
+            $this->config()->basicAuthPassword()
+        )->get($this->config()->url('/files'), [
             'file_paths' => $this->filePaths(),
             'excluded_file_paths' => $this->excludedFilePaths(),
         ]);
 
         if ($response->failed()) {
-            $this->error('Request failed with status: ' . $response->status());
-
+            $this->error('Request failed with status: '.$response->status());
             return self::FAILURE;
         }
 

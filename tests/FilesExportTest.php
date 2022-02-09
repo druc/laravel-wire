@@ -3,6 +3,7 @@
 namespace Druc\LaravelWire\Tests;
 
 use Druc\LaravelWire\Exports\FilesExport;
+use Druc\LaravelWire\FileCollection;
 use Illuminate\Support\Facades\File;
 use ZipArchive;
 
@@ -13,10 +14,12 @@ class FilesExportTest extends TestCase
     {
         File::put(storage_path('temp.txt'), 'temporary file');
 
-        $export = new FilesExport([
-            'file_paths' => [$this->path('storage/temp.txt')],
-            'excluded_file_paths' => [],
-        ]);
+        $export = new FilesExport(
+            FileCollection::create([
+                'paths' => [$this->path('storage/temp.txt')],
+                'excludedPaths' => [],
+            ])
+        );
 
         $zip = new ZipArchive();
         $zip->open($export->path());
@@ -31,10 +34,12 @@ class FilesExportTest extends TestCase
         File::ensureDirectoryExists(storage_path('files'));
         File::put(storage_path('files/temp.txt'), 'temporary file');
 
-        $export = new FilesExport([
-            'file_paths' => [$this->path('storage/files')],
-            'excluded_file_paths' => [],
-        ]);
+        $export = new FilesExport(
+            FileCollection::create([
+                'paths' => [$this->path('storage/files')],
+                'excludedPaths' => [],
+            ])
+        );
 
         $zip = new ZipArchive();
         $zip->open($export->path());
@@ -49,10 +54,12 @@ class FilesExportTest extends TestCase
         File::put(storage_path('temp.txt'), 'temporary file');
         File::put(storage_path('excluded_temp.txt'), 'Excluded temporary file');
 
-        $export = new FilesExport([
-            'file_paths' => [$this->path('storage/temp.txt')],
-            'excluded_file_paths' => [$this->path('storage/excluded_temp.txt')],
-        ]);
+        $export = new FilesExport(
+            FileCollection::create([
+                'paths' => [$this->path('storage/temp.txt')],
+                'excludedPaths' => [$this->path('storage/excluded_temp.txt')]
+            ])
+        );
 
         $zip = new ZipArchive();
         $zip->open($export->path());
@@ -69,10 +76,12 @@ class FilesExportTest extends TestCase
         File::put(storage_path('temp.txt'), 'temporary file');
         File::put(storage_path('files/excluded_temp.txt'), 'Excluded temporary file');
 
-        $export = new FilesExport([
-            'file_paths' => [$this->path('storage/temp.txt')],
-            'excluded_file_paths' => [$this->path('storage/files')],
-        ]);
+        $export = new FilesExport(
+            FileCollection::create([
+                'paths' => [$this->path('storage/temp.txt')],
+                'excludedPaths' => [$this->path('storage/files')]
+            ])
+        );
 
         $zip = new ZipArchive();
         $zip->open($export->path());
@@ -81,16 +90,6 @@ class FilesExportTest extends TestCase
 
         File::deleteDirectory(storage_path('files'));
         File::delete([storage_path('temp.txt')]);
-    }
-
-    /** @test */
-    public function export_path_with_no_files()
-    {
-        $export = new FilesExport([
-            'file_paths' => [],
-            'excluded_file_paths' => [],
-        ]);
-        $this->assertFileExists($export->path());
     }
 
     protected function tearDown(): void

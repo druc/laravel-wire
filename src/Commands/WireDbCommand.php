@@ -15,25 +15,23 @@ class WireDbCommand extends Command
 
     public function handle(): int
     {
-        $request = Http::withHeaders([
-            'wire-key' => $this->config()->authKey(),
-        ]);
-
-        if ($this->config()->hasBasicAuth()) {
-            $request = $request->withBasicAuth(
-                $this->config()->basicAuthUsername(),
-                $this->config()->basicAuthPassword()
-            );
+        if ($this->option('tables') && $this->option('exclude')) {
+            $this->error('Cannot exclude and include tables at the same time.');
+            return self::FAILURE;
         }
 
-        $response = $request->get($this->config()->url('/database'), [
+        $response = Http::withHeaders([
+            'wire-key' => $this->config()->authKey(),
+        ])->withBasicAuth(
+            $this->config()->basicAuthUsername(),
+            $this->config()->basicAuthPassword()
+        )->get($this->config()->url('/database'), [
             'tables' => $this->tables(),
             'excluded_tables' => $this->excludedTables(),
         ]);
 
         if ($response->failed()) {
-            $this->error('Request failed with status: ' . $response->status());
-
+            $this->error('Request failed with status: '.$response->status());
             return self::FAILURE;
         }
 
