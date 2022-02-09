@@ -17,7 +17,7 @@ class WireController
     public function __construct(EnvironmentConfig $config)
     {
         if (empty($config->authKey()) || request()->header('wire-key') !== $config->authKey()) {
-            if (strpos(php_sapi_name(), 'cli') !== false) {
+            if (strpos(php_sapi_name(), 'cli') === false) {
                 abort(403);
             }
         }
