@@ -28,12 +28,17 @@ return [
     'default' => 'stage',
     'environments' => [
         'stage' => [
-            'url' => 'https://example.test',
-            'key' => '1234'
+            'url' => 'https://your-stage-environment.com',
+            'auth_key' => 'BqNbqyoxswma4bYzj8rnsAhfySp0york',
+            'file_paths' => ['storage'],
+            'excluded_file_paths' => [],
+            'basic_auth' => [
+                'enabled' => false,
+                'username' => 'johndoe',
+                'password' => 'supersecret'
+            ]
         ]
-    ],
-    'paths' => ['public', 'storage'],
-    'excluded_paths' => []
+    ]
 ];
 ```
 
