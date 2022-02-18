@@ -57,7 +57,7 @@ class FilesExportTest extends TestCase
         $export = new FilesExport(
             FileCollection::create([
                 'paths' => [$this->path('storage/temp.txt')],
-                'excludedPaths' => [$this->path('storage/excluded_temp.txt')]
+                'excludedPaths' => [$this->path('storage/excluded_temp.txt')],
             ])
         );
 
@@ -79,7 +79,7 @@ class FilesExportTest extends TestCase
         $export = new FilesExport(
             FileCollection::create([
                 'paths' => [$this->path('storage/temp.txt')],
-                'excludedPaths' => [$this->path('storage/files')]
+                'excludedPaths' => [$this->path('storage/files')],
             ])
         );
 

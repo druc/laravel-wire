@@ -22,7 +22,7 @@ class FilesExport
     public function path(): string
     {
         File::ensureDirectoryExists(dirname($this->zipPath));
-        
+
         // creates empty zip
         File::put($this->zipPath, base64_decode("UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=="));
 

@@ -17,6 +17,7 @@ class WireDbCommand extends Command
     {
         if ($this->option('tables') && $this->option('exclude')) {
             $this->error('Cannot exclude and include tables at the same time.');
+
             return self::FAILURE;
         }
 
@@ -32,6 +33,7 @@ class WireDbCommand extends Command
 
         if ($response->failed()) {
             $this->error('Request failed with status: '.$response->status());
+
             return self::FAILURE;
         }
 

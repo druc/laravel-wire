@@ -27,6 +27,7 @@ class WireFilesCommand extends Command
 
         if ($response->failed()) {
             $this->error('Request failed with status: '.$response->status());
+
             return self::FAILURE;
         }
 

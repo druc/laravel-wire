@@ -17,6 +17,7 @@ class EnvironmentConfig
     {
         $url = rtrim($this->config("url"), '/').$segments;
         Assert::notEmpty($url, "$this->env environment url is empty.");
+
         return $url;
     }
 
