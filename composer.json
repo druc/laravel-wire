@@ -20,7 +20,7 @@
         "ext-zip": "*",
         "guzzlehttp/guzzle": "^7.4",
         "illuminate/contracts": "^8.73|^9.0",
-        "spatie/db-dumper": "^2.21",
+        "spatie/db-dumper": "^3.2",
         "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
