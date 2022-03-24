@@ -18,7 +18,7 @@ class FakeDumper extends DbDumper
         return $this;
     }
 
-    public function excludeTables($tables)
+    public function excludeTables(array|string $tables): DbDumper
     {
         $tables = is_array($tables) ? $tables : explode(',', $tables);
         $this->excludedTables = array_merge($this->includedTables, $tables);
@@ -26,7 +26,7 @@ class FakeDumper extends DbDumper
         return $this;
     }
 
-    public function dumpToFile(string $dumpFile)
+    public function dumpToFile(string $dumpFile): void
     {
         // TODO: Implement dumpToFile() method.
     }
